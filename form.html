@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <form onsubmit="saveToLocalStorage(event)">
+            <div class="row">
+
+                <div class="col">
+                    <label for="amount" class="form-label">Expense Amount</label>
+                    <input type="number" class="form-control" id="amount">
+                </div>
+
+                <div class="col">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description">
+                </div>
+
+                <div class="col">
+                    <label for="category" class="form-label">Category</label>
+                    <select id="category" class="form-control form-select">
+                        <option>FUEL</option>
+                        <option>FOOD</option>
+                        <option>ELECTRICITY</option>
+                        <option>MOVIE</option>
+                        <option>PICNIC</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <button class="mt-4">Add Expense</button>
+
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+    <ul id="list-of-items"></ul>
+    <script>
+        function saveToLocalStorage(event) {
+            event.preventDefault();
+
+            let AMOUNT = event.target.amount.value;
+            let DESCRIPTION = event.target.description.value;
+            let CATEGORY = event.target.category.value;
+
+            let myExpense = {
+                AMOUNT,
+                DESCRIPTION,
+                CATEGORY
+            }
+            localStorage.setItem(myExpense.CATEGORY, JSON.stringify(myExpense))
+            showDetailsonScreen(myExpense)
+        }
+
+        function showDetailsonScreen(myExpense) {
+            const parentElement = document.getElementById('list-of-items')
+            const childElement = document.createElement('li');
+            childElement.textContent = myExpense.AMOUNT + "-" + myExpense.DESCRIPTION + "-" + myExpense.CATEGORY;
+            parentElement.appendChild(childElement)
+
+            const delBtn = document.createElement('input')
+            delBtn.setAttribute("type", "button")
+            delBtn.value = "Delete Expense"
+            delBtn.onclick = () => {
+                localStorage.removeItem(myExpense.CATEGORY)
+                parentElement.removeChild(childElement)
+            }
+            childElement.appendChild(delBtn)
+
+            const editBtn = document.createElement('input')
+            editBtn.setAttribute("type", "button")
+            editBtn.value = "Edit Expense"
+            editBtn.onclick = () => {
+                localStorage.removeItem(myExpense.CATEGORY)
+                parentElement.removeChild(childElement)
+                document.getElementById('amount').value = myExpense.AMOUNT
+                document.getElementById('description').value = myExpense.DESCRIPTION
+                document.getElementById('category').value = myExpense.CATEGORY
+            }
+            childElement.appendChild(editBtn)
+        }
+    </script>
+
+</body>
+
+</html>
